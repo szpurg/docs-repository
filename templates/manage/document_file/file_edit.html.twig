@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Przesyłanie pliku w dokumencie "{{ document.name }}"{% endblock %}
+
+{% block body %}
+    <h3>{% if documentFileId %}Edycja {% else %}Przesyłanie {% endif %}pliku w dokumencie "{{ document.name }}"</h3>
+    
+    <div class="container mt-5" style="margin-bottom: 30px;">
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {% if documentFileId %}
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <a href="{{ path('doc_file_download', {fileId: documentFileId}) }}"><i class="fas fa-paperclip"></i> {{ documentFile.name }}</a>
+                </div>
+            {% else %}
+                <div class="form-group">
+                    {{ form_errors(form.file) }}
+                    {{ form_label(form.file) }}
+                    {{ form_widget(form.file, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            {% endif %}
+            <div class="form-group">
+                {{ form_errors(form.name) }}
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_errors(form.description) }}
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Zapisz</button>
+        {{ form_end(form) }}
+    </div>
+    <br>
+{% endblock %}

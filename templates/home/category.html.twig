@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Via Medica Docs repository{% endblock %}
+
+{% block manageCategory %}
+    <div id="manageBox" class="pageBox">
+        <div class="row">
+            <div class="col-12">
+                {% if parentCategory is defined and parentCategory %}
+                    <a type="button" class="btn btn-primary" href="{{ path('doc_manage_edit_category', {parentCategoryId: parentCategory.id}) }}">Utwórz kategorię</a>
+                    <a type="button" class="btn btn-primary" href="{{ path('doc_manage_edit_document', {categoryId: parentCategory.id}) }}">Utwórz dokument</a>
+                {% else %}
+                    <a type="button" class="btn btn-primary" href="{{ path('doc_manage_edit_category') }}">Utwórz kategorię</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+    <div id="categoryListBox" class="pageBox">
+        {% if categories|length %}
+            <div class="container mt-5">
+                <h4>Lista kategorii</h4>
+
+                <table id="category-table" class="table table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Nazwa</th>
+                            <th>Utworzony</th>
+                            <th>Modyfikowany</th>
+                            <th style="width: 200px;">Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for categoryItem in categories %}
+                            <tr>
+                                <td><a href="{{ path('doc_category', {categoryId: categoryItem.id}) }}"><i class="fas fa-folder"></i> {{ categoryItem.name }}</a></td>
+                                <td>
+                                    {{ categoryItem.createdAt.format("Y-m-d H:i:s") }}
+                                </td>
+                                <td>
+                                    {{ categoryItem.modifiedAt.format("Y-m-d H:i:s") }}
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        {% if parentCategory %}
+                                            <a href="{{ path('doc_manage_edit_category', {parentCategoryId: parentCategory.id, categoryId: categoryItem.id}) }}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ path('doc_manage_edit_category', {parentCategoryId: 0, categoryId: categoryItem.id}) }}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        {% endif %}
+                                        
+                                        <a class="deleteCategory" href="{{ path('doc_manage_delete_category', {categoryId: categoryItem.id}) }}">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>            
+            </div>
+        {% elseif documents|length == 0 %}
+            <p>Kategoria jest obecnie pusta</p>
+        {% endif %}
+    </div>
+    <div id="documentsListBox" class="pageBox">
+        {% if documents|length %}
+            <div class="container mt-5">
+                <h4>Lista dokumentów</h4>
+
+                <table id="documents-table" class="table table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Nazwa</th>
+                            <th>Utworzony</th>
+                            <th>Modyfikowany</th>
+                            <th style="width: 200px;">Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for documentItem in documents %}
+                            <tr>
+                                <td><a href="{{ path('doc_document', {documentId: documentItem.id}) }}"><i class="fas fa-file-alt"></i> {{ documentItem.name }}</a></td>
+                                <td>
+                                    {{ documentItem.createdAt.format("Y-m-d H:i:s") }}
+                                </td>
+                                <td>
+                                    {{ documentItem.modifiedAt.format("Y-m-d H:i:s") }}
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="{{ path('doc_manage_edit_document', {categoryId: parentCategory.id, documentId: documentItem.id}) }}">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        
+                                        <a class="deleteDocument" href="{{ path('doc_manage_delete_document', {documentId: documentItem.id}) }}">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>            
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+             $('#category-table, #documents-table').DataTable({
+                 "paging": true,
+                 "searching": true,
+                 "ordering": true,
+                 "order": [[ 1, 'asc' ]], // Sortowanie domyślne po nazwie
+                 "language": {
+                     "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Polish.json" // Polskie tłumaczenie
+                 }
+             });
+        });
+        
+        $('.deleteCategory').on("click", function() {
+            if (confirm("Na pewno usunąć kategorię i całą jej zawartość? Operacja jest nieodwracalna.")) {
+                $(this).attr("href", $(this).attr("href") + '/1');
+                return true;
+            }
+            return false;
+        });
+        $('.deleteDocument').on("click", function() {
+            if (confirm("Na pewno usunąć dokument i całą jego zawartość? Operacja jest nieodwracalna.")) {
+                $(this).attr("href", $(this).attr("href") + '/1');
+                return true;
+            }
+            return false;
+        });
+        
+        </script>
+{% endblock %}

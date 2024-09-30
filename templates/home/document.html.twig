@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Via Medica Docs repository{% endblock %}
+
+{% block manageCategory %}
+    <div id="manageBox" class="pageBox">
+        <div class="row">
+            <div class="col-12">
+                <a type="button" class="btn btn-primary" href="{{ path('doc_manage_edit_file', {documentId: document.id}) }}">Utwórz plik</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+    <div id="filesListBox" class="pageBox">
+        <div class="container mt-5">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('danger') %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% if files|length %}
+            <div class="container mt-5">
+                <h4>Lista Plików</h4>
+
+                <table id="files-table" class="table table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Nazwa</th>
+                            <th>Utworzony</th>
+                            <th>Modyfikowany</th>
+                            <th style="width: 200px;">Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fileItem in files %}
+                            <tr>
+                                <td><a href="{{ path('doc_file_download', {fileId: fileItem.id}) }}"><i class="fas fa-paperclip"></i> {{ fileItem.name }}</a></td>
+                                <td>
+                                    {{ fileItem.createdAt.format("Y-m-d H:i:s") }}
+                                </td>
+                                <td>
+                                    {{ fileItem.modifiedAt.format("Y-m-d H:i:s") }}
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <a class="editFile" href="{{ path('doc_manage_edit_file', {documentId: document.id, fileId: fileItem.id}) }}">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a class="deleteFile" href="{{ path('doc_manage_delete_file', {fileId: fileItem.id}) }}">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>            
+            </div>
+        {% else %}
+            <p>Obecnie brak plików</p>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+             $('#files-table').DataTable({
+                 "paging": true,
+                 "searching": true,
+                 "ordering": true,
+                 "order": [[ 1, 'asc' ]], // Sortowanie domyślne po nazwie
+                 "language": {
+                     "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Polish.json" // Polskie tłumaczenie
+                 }
+             });
+        });
+        $('.deleteFile').on("click", function() {
+            if (confirm("Na pewno usunąć plik? Operacja jest nieodwracalna")) {
+                $(this).attr("href", $(this).attr("href") + '/1');
+                return true;
+            }
+            return false;
+        });
+    </script>
+{% endblock %}
