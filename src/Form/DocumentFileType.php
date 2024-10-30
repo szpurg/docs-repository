@@ -38,8 +38,10 @@ class DocumentFileType extends AbstractType {
                                     'application/vnd.oasis.opendocument.spreadsheet', // ODS (LibreOffice/OpenOffice Spreadsheet)
                                     'application/vnd.oasis.opendocument.presentation', // ODP (LibreOffice/OpenOffice Presentation)
                                     'image/*', // Obrazy
+                                    'application/x-freemind',
+                                    'application/x-xmind',
                                 ],
-                                'mimeTypesMessage' => 'Proszę przesłać poprawny plik (PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, ODS, ODP, obrazy).',
+                                'mimeTypesMessage' => 'Proszę przesłać poprawny plik (PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, ODS, ODP, MMAP, XMIND, MM, obrazy).',
                             ]),
                         ],
                     ])
