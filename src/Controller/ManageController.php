@@ -123,8 +123,11 @@ class ManageController extends AbstractController {
                     // Generowanie unikalnej nazwy pliku
                     $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $safeFilename = $slugger->slug($originalFilename);
-                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
-
+                    $exp = explode('.', $file->getClientOriginalName());
+                    $extenion = count($exp) >= 2 ? end($exp) : '';
+                    
+                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $extenion;
+                    
                     try {
                         $pathPart = $this->categoryService->generateFileDir($document);
                         $dir = $this->getParameter('uploads_directory') . "/" . $pathPart;

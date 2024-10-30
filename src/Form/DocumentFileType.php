@@ -40,6 +40,7 @@ class DocumentFileType extends AbstractType {
                                     'image/*', // Obrazy
                                     'application/x-freemind',
                                     'application/x-xmind',
+                                    'application/zip',
                                 ],
                                 'mimeTypesMessage' => 'Proszę przesłać poprawny plik (PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, ODS, ODP, MMAP, XMIND, MM, obrazy).',
                             ]),
